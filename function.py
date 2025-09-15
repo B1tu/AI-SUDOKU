@@ -1,5 +1,3 @@
-from collections import deque
-
 def is_valid(board, row, col, value):
     for c in range(9):
         if c != col:
@@ -191,7 +189,6 @@ def solve_MRV_LCV_FC(board):
             return True
 
         row, col = cell
-
 
         candidates = list(domains[row][col])
         candidates.sort(key=lambda val: sum(val in domains[r][c]

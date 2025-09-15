@@ -25,7 +25,7 @@ class SudokuGUI:
                 self.entries[i][j] = e
 
         self.solver_choice = tk.StringVar()
-        solvers = ["BACKTRACK THUẦN", "MRV", "MRV+LCV", "MRV+LCV+FC", "MRV+LCV+FC+AC3"]
+        solvers = ["BACKTRACK THUẦN", "MRV", "MRV+LCV", "MRV+LCV+FC"]
         self.solver_choice.set(solvers[0])
         tk.Label(root, text="Chọn Solver:").pack()
         self.solver_menu = ttk.Combobox(root, textvariable=self.solver_choice, values=solvers, state="readonly")
