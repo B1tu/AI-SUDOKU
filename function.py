@@ -94,7 +94,6 @@ def solve_heuristic_MRV(board, visualize=False, draw_fn=None, delay=0.05):
             if solve_heuristic_MRV(board, visualize, draw_fn, delay):
                 return True
 
-            # quay lui
             board[row][col] = 0
             if visualize and draw_fn:
                 draw_fn(board, highlight=(row, col, (200, 50, 50)))
@@ -206,7 +205,6 @@ def solve_MRV_LCV_FC(board, visualize=False, draw_fn=None, delay=0.05):
 
     def backtrack():
         global dem
-        # chọn ô theo MRV
         min_len, cell = 10, None
         for i in range(9):
             for j in range(9):
@@ -219,7 +217,6 @@ def solve_MRV_LCV_FC(board, visualize=False, draw_fn=None, delay=0.05):
             return True
 
         row, col = cell
-        # sắp xếp LCV
         candidates = list(domains[row][col])
         candidates.sort(key=lambda val: sum(val in domains[r][c]
                                             for r, c in get_neighbors(row, col)))

@@ -39,69 +39,90 @@ def main():
                     elapsed_time = elapsed_real_time = backtracks = 0
 
                     if buttons["basic"].collidepoint(pos):
-                        solver_name = "Backtracking co ban"
+                        solver_name = "Backtracking cơ bản"
+
+                        reset_counter()
                         start_real = time.time()
                         solve([row[:] for row in board], visualize=False, draw_fn=None, delay=0)
                         elapsed_real_time = time.time() - start_real
+                        backtracks_real = get_counter()
 
+                        reset_counter()
                         start_total = time.time()
                         solve(board, visualize=True,
-                              draw_fn=lambda b, highlight=None: draw_board(b, solver_name,
-                                                                            time.time() - start_total,
-                                                                            elapsed_real_time,
-                                                                            get_counter(),
-                                                                            highlight, delay),
+                              draw_fn=lambda b, highlight=None: draw_board(
+                                  b, solver_name,
+                                  time.time() - start_total,
+                                  elapsed_real_time,
+                                  get_counter(),
+                                  highlight, delay),
                               delay=delay)
                         elapsed_time = time.time() - start_total
                         backtracks = get_counter()
 
                     elif buttons["mrv"].collidepoint(pos):
                         solver_name = "Backtracking + MRV"
+
+                        reset_counter()
                         start_real = time.time()
                         solve_heuristic_MRV([row[:] for row in board], visualize=False, draw_fn=None, delay=0)
                         elapsed_real_time = time.time() - start_real
+                        backtracks_real = get_counter()
 
+                        reset_counter()
                         start_total = time.time()
                         solve_heuristic_MRV(board, visualize=True,
-                                            draw_fn=lambda b, highlight=None: draw_board(b, solver_name,
-                                                                                          time.time() - start_total,
-                                                                                          elapsed_real_time,
-                                                                                          get_counter(),
-                                                                                          highlight, delay),
+                                            draw_fn=lambda b, highlight=None: draw_board(
+                                                b, solver_name,
+                                                time.time() - start_total,
+                                                elapsed_real_time,
+                                                get_counter(),
+                                                highlight, delay),
                                             delay=delay)
                         elapsed_time = time.time() - start_total
                         backtracks = get_counter()
 
                     elif buttons["mrv_lcv"].collidepoint(pos):
                         solver_name = "Backtracking + MRV + LCV"
+
+                        reset_counter()
                         start_real = time.time()
                         solve_heuristic_MRV_LCV([row[:] for row in board], visualize=False, draw_fn=None, delay=0)
                         elapsed_real_time = time.time() - start_real
+                        backtracks_real = get_counter()
 
+                        reset_counter()
                         start_total = time.time()
                         solve_heuristic_MRV_LCV(board, visualize=True,
-                                                draw_fn=lambda b, highlight=None: draw_board(b, solver_name,
-                                                                                              time.time() - start_total,
-                                                                                              elapsed_real_time,
-                                                                                              get_counter(),
-                                                                                              highlight, delay),
+                                                draw_fn=lambda b, highlight=None: draw_board(
+                                                    b, solver_name,
+                                                    time.time() - start_total,
+                                                    elapsed_real_time,
+                                                    get_counter(),
+                                                    highlight, delay),
                                                 delay=delay)
                         elapsed_time = time.time() - start_total
                         backtracks = get_counter()
 
+
                     elif buttons["fc"].collidepoint(pos):
                         solver_name = "Backtracking + MRV + LCV + FC"
+
+                        reset_counter()
                         start_real = time.time()
                         solve_MRV_LCV_FC([row[:] for row in board], visualize=False, draw_fn=None, delay=0)
                         elapsed_real_time = time.time() - start_real
+                        backtracks_real = get_counter()
 
+                        reset_counter()
                         start_total = time.time()
                         solve_MRV_LCV_FC(board, visualize=True,
-                                         draw_fn=lambda b, highlight=None: draw_board(b, solver_name,
-                                                                                       time.time() - start_total,
-                                                                                       elapsed_real_time,
-                                                                                       get_counter(),
-                                                                                       highlight, delay),
+                                         draw_fn=lambda b, highlight=None: draw_board(
+                                             b, solver_name,
+                                             time.time() - start_total,
+                                             elapsed_real_time,
+                                             get_counter(),
+                                             highlight, delay),
                                          delay=delay)
                         elapsed_time = time.time() - start_total
                         backtracks = get_counter()

@@ -46,7 +46,6 @@ def draw_board(board, solver_name="", elapsed_time=0, real_time=0, backtracks=0,
     if highlight:
         if len(highlight) == 2:
             (r, c) = highlight
-            color = (0, 255, 0)  # mặc định xanh lá
         else:
             (r, c, color) = highlight
         x = MARGIN + c * CELL_SIZE
