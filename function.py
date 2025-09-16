@@ -1,3 +1,5 @@
+import time
+import pygame
 def is_valid(board, row, col, value):
     for c in range(9):
         if c != col:
@@ -26,18 +28,28 @@ def reset_counter():
 def get_counter():
     return dem
 
-def solve(board):
+def solve(board, visualize=False, draw_fn=None, delay=0.05):
     global dem
     for i in range(9):
         for j in range(9):
-            if(board[i][j]==0):
-                for k in range(1,10):
-                    if(is_valid(board, i, j, k)):
+            if board[i][j] == 0:
+                for k in range(1, 10):
+                    if is_valid(board, i, j, k):
                         board[i][j] = k
-                        if solve(board):
+                        if visualize and draw_fn:
+                            draw_fn(board, highlight=(i, j, (50, 50, 255)))
+                            pygame.display.flip()
+                            time.sleep(delay)
+
+                        if solve(board, visualize, draw_fn, delay):
                             return True
-                        board[i][j]=0
+                        board[i][j] = 0
                         dem += 1
+
+                        if visualize and draw_fn:
+                            draw_fn(board, highlight=(i, j, (200, 50, 50)))
+                            pygame.display.flip()
+                            time.sleep(delay)
                 return False
     return True
 
@@ -62,20 +74,32 @@ def find_best_cell(board):
         return (-1,-1)
     return best_cell
 
-def solve_heuristic_MRV(board):
+def solve_heuristic_MRV(board, visualize=False, draw_fn=None, delay=0.05):
     global dem
     cell = find_best_cell(board)
     if cell is None:
         return False
-    if cell == (-1,-1):
+    if cell == (-1, -1):
         return True
+
     row, col = cell
     for k in range(1, 10):
-        if (is_valid(board, row, col, k)):
+        if is_valid(board, row, col, k):
             board[row][col] = k
-            if solve_heuristic_MRV(board):
+
+            if visualize and draw_fn:
+                draw_fn(board, highlight=(row, col, (50, 50, 255)))
+                time.sleep(delay)
+
+            if solve_heuristic_MRV(board, visualize, draw_fn, delay):
                 return True
+
+            # quay lui
             board[row][col] = 0
+            if visualize and draw_fn:
+                draw_fn(board, highlight=(row, col, (200, 50, 50)))
+                time.sleep(delay)
+
             dem += 1
     return False
 
@@ -107,7 +131,7 @@ def count_constraints(board, row, col, val):
     board[row][col] = 0
     return impact
 
-def solve_heuristic_MRV_LCV(board):
+def solve_heuristic_MRV_LCV(board, visualize=False, draw_fn=None, delay=0.05):
     global dem
     cell = find_best_cell(board)
     if cell is None:
@@ -116,16 +140,23 @@ def solve_heuristic_MRV_LCV(board):
     if row == -1 and col == -1:
         return True
 
-    candidates = [k for k in range(1,10)
-                  if is_valid(board, row, col, k)]
-
-    candidates.sort(key=lambda val: count_constraints(board, row, col, val), reverse=True)
+    candidates = [k for k in range(1,10) if is_valid(board, row, col, k)]
+    candidates.sort(key=lambda val: count_constraints(board, row, col, val), reverse = True)
 
     for val in candidates:
         board[row][col] = val
-        if solve_heuristic_MRV_LCV(board):
+        if visualize and draw_fn:
+            draw_fn(board, highlight=(row, col, (50, 50, 255)))
+            time.sleep(delay)
+
+        if solve_heuristic_MRV_LCV(board, visualize, draw_fn, delay):
             return True
+
         board[row][col] = 0
+        if visualize and draw_fn:
+            draw_fn(board, highlight=(row, col, (200, 50, 50)))
+            time.sleep(delay)
+
         dem += 1
     return False
 
@@ -169,15 +200,14 @@ def get_neighbors(row, col):
                 neighbors.add((r, c))
     return neighbors
 
-def solve_MRV_LCV_FC(board):
+def solve_MRV_LCV_FC(board, visualize=False, draw_fn=None, delay=0.05):
     global dem
     domains = init_domain(board)
 
     def backtrack():
         global dem
-
-        min_len = 10
-        cell = None
+        # chọn ô theo MRV
+        min_len, cell = 10, None
         for i in range(9):
             for j in range(9):
                 if board[i][j] == 0:
@@ -189,14 +219,17 @@ def solve_MRV_LCV_FC(board):
             return True
 
         row, col = cell
-
+        # sắp xếp LCV
         candidates = list(domains[row][col])
         candidates.sort(key=lambda val: sum(val in domains[r][c]
-                                             for r, c in get_neighbors(row, col)))
+                                            for r, c in get_neighbors(row, col)))
 
         for val in candidates:
-
             board[row][col] = val
+
+            if visualize and draw_fn:
+                draw_fn(board, highlight=(row, col, (50, 50, 255)))
+                time.sleep(delay)
 
             removed = {}
             fail = False
@@ -207,13 +240,19 @@ def solve_MRV_LCV_FC(board):
                     if not domains[r][c]:
                         fail = True
                         break
+
             if not fail:
                 if backtrack():
                     return True
 
             board[row][col] = 0
+            if visualize and draw_fn:
+                draw_fn(board, highlight=(row, col, (200, 50, 50)))
+                time.sleep(delay)
+
             for (r, c), v in removed.items():
                 domains[r][c].add(v)
+
             dem += 1
         return False
 
